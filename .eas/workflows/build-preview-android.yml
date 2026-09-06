@@ -1,0 +1,31 @@
+name: Build Android Preview APK
+run_name: Android preview APK from ${{ github.ref_name || 'manual run' }}
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+    paths:
+      - App.tsx
+      - app.json
+      - eas.json
+      - package.json
+      - package-lock.json
+      - src/**
+      - assets/**
+      - .eas/workflows/**
+
+concurrency:
+  cancel_in_progress: true
+  group: ${{ workflow.filename }}-${{ github.ref }}
+
+jobs:
+  build_android_preview:
+    name: Build installable Android APK
+    type: build
+    environment: preview
+    params:
+      platform: android
+      profile: preview
+      message: Automated preview APK from EAS Workflow
